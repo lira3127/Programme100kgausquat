@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Squat 100kg">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0f0f1a">
+<title>Squat 100kg 🏋️</title>
+<link rel="manifest" id="manifest-placeholder">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:wght@400;500;600&display=swap');
+
+  :root {
+    --bg: #0a0a14;
+    --bg2: #13131f;
+    --bg3: #1a1a28;
+    --border: rgba(255,255,255,0.07);
+    --text: #e8e8f8;
+    --muted: #7777aa;
+    --p1: #7C9EFF;
+    --p2: #A78BFA;
+    --p3: #F472B6;
+    --p4: #34D399;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', system-ui, sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* ---- INSTALL BANNER ---- */
+  #install-banner {
+    display: none;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(135deg, #1e1e35, #2a1a2e);
+    border-top: 1px solid rgba(167,139,250,0.3);
+    padding: 14px 20px;
+    z-index: 1000;
+    align-items: center;
+    gap: 12px;
+    animation: slideUp 0.3s ease;
+  }
+  #install-banner.show { display: flex; }
+  #install-banner .icon { font-size: 28px; flex-shrink: 0; }
+  #install-banner .text { flex: 1; }
+  #install-banner .text strong { display: block; font-size: 13px; color: #e0e0f8; font-family: 'Syne', sans-serif; }
+  #install-banner .text span { font-size: 11px; color: var(--muted); }
+  #install-banner button {
+    background: linear-gradient(135deg, var(--p2), var(--p3));
+    border: none; color: white; padding: 8px 16px;
+    border-radius: 10px; font-size: 12px; font-weight: 700;
+    cursor: pointer; flex-shrink: 0; font-family: 'DM Sans', sans-serif;
+  }
+  #install-banner .close-btn {
+    background: transparent; border: none; color: var(--muted);
+    padding: 4px 8px; cursor: pointer; font-size: 18px; flex-shrink: 0;
+  }
+
+  /* ---- IOS BANNER ---- */
+  #ios-banner {
+    display: none;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(135deg, #1e1e35, #2a1a2e);
+    border-top: 1px solid rgba(167,139,250,0.3);
+    padding: 16px 20px;
+    z-index: 1000;
+    flex-direction: column;
+    gap: 10px;
+    animation: slideUp 0.3s ease;
+  }
+  #ios-banner.show { display: flex; }
+  #ios-banner .ios-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px; font-weight: 800; color: #e0e0f8;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  #ios-banner .ios-steps { font-size: 12px; color: #aaaacc; line-height: 1.8; }
+  #ios-banner .ios-steps span { color: var(--p2); font-weight: 700; }
+  #ios-banner .close-btn {
+    background: transparent; border: none; color: var(--muted);
+    cursor: pointer; font-size: 18px;
+  }
+
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+  /* ---- HEADER ---- */
+  .header {
+    background: linear-gradient(135deg, rgba(124,158,255,0.12), rgba(167,139,250,0.06));
+    border-bottom: 1px solid var(--border);
+    padding: 48px 20px 24px;
+    text-align: center;
+  }
+
+  .header-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px; letter-spacing: 3px;
+    color: var(--p1); font-weight: 600;
+    text-transform: uppercase; margin-bottom: 8px;
+  }
+
+  .header-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(24px, 7vw, 36px);
+    font-weight: 900; line-height: 1.1;
+    background: linear-gradient(90deg, var(--p1), var(--p2), var(--p3));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 6px;
+  }
+
+  .header-sub { font-size: 12px; color: var(--muted); }
+
+  .progress-wrap { max-width: 320px; margin: 16px auto 0; }
+  .progress-labels { display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); margin-bottom: 5px; }
+  .progress-bar { height: 5px; background: rgba(255,255,255,0.07); border-radius: 999px; overflow: hidden; }
+  .progress-fill { height: 100%; width: 4%; background: linear-gradient(90deg, var(--p1), var(--p2)); border-radius: 999px; }
+
+  /* ---- PHASE TABS ---- */
+  .phase-tabs {
+    display: flex; gap: 8px;
+    padding: 14px 16px;
+    overflow-x: auto;
+    border-bottom: 1px solid var(--border);
+    scrollbar-width: none;
+  }
+  .phase-tabs::-webkit-scrollbar { display: none; }
+
+  .phase-tab {
+    flex: 0 0 auto;
+    padding: 9px 14px;
+    border-radius: 12px;
+    border: 1.5px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.02);
+    color: var(--muted);
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px; font-weight: 700;
+    transition: all 0.2s;
+    text-align: left;
+  }
+  .phase-tab .tab-label { font-size: 9px; opacity: 0.6; margin-bottom: 2px; display: block; }
+  .phase-tab.active-1 { border-color: var(--p1); background: rgba(124,158,255,0.12); color: var(--p1); }
+  .phase-tab.active-2 { border-color: var(--p2); background: rgba(167,139,250,0.12); color: var(--p2); }
+  .phase-tab.active-3 { border-color: var(--p3); background: rgba(244,114,182,0.12); color: var(--p3); }
+  .phase-tab.active-4 { border-color: var(--p4); background: rgba(52,211,153,0.12); color: var(--p4); }
+
+  /* ---- CONTENT ---- */
+  .content { padding: 18px 16px; max-width: 700px; margin: 0 auto; }
+
+  /* ---- PHASE CARD ---- */
+  .phase-card {
+    border-radius: 16px; padding: 18px;
+    margin-bottom: 14px;
+  }
+  .phase-card.c1 { background: rgba(124,158,255,0.08); border: 1px solid rgba(124,158,255,0.2); }
+  .phase-card.c2 { background: rgba(167,139,250,0.08); border: 1px solid rgba(167,139,250,0.2); }
+  .phase-card.c3 { background: rgba(244,114,182,0.08); border: 1px solid rgba(244,114,182,0.2); }
+  .phase-card.c4 { background: rgba(52,211,153,0.08); border: 1px solid rgba(52,211,153,0.2); }
+
+  .phase-header-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
+  .phase-name-label { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 3px; }
+  .phase-title { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 900; color: #f0f0ff; }
+  .phase-dates { font-size: 10px; color: var(--muted); margin-top: 2px; }
+  .phase-goal-badge { border-radius: 10px; padding: 7px 11px; text-align: center; flex-shrink: 0; max-width: 120px; }
+  .phase-goal-badge .badge-label { font-size: 8px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 3px; }
+  .phase-goal-badge .badge-text { font-size: 10px; color: #ddd; line-height: 1.4; }
+  .phase-desc { font-size: 12px; color: #aaaacc; line-height: 1.6; }
+
+  /* ---- INNER TABS ---- */
+  .inner-tabs { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+  .inner-tab {
+    padding: 6px 12px; border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: transparent;
+    color: var(--muted); cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px; font-weight: 600;
+    transition: all 0.2s;
+  }
+  .inner-tab.it1.on { border-color: var(--p1); background: rgba(124,158,255,0.15); color: var(--p1); }
+  .inner-tab.it2.on { border-color: var(--p2); background: rgba(167,139,250,0.15); color: var(--p2); }
+  .inner-tab.it3.on { border-color: var(--p3); background: rgba(244,114,182,0.15); color: var(--p3); }
+  .inner-tab.it4.on { border-color: var(--p4); background: rgba(52,211,153,0.15); color: var(--p4); }
+
+  /* ---- SECTIONS ---- */
+  .section { display: none; }
+  .section.visible { display: block; }
+
+  /* Key points */
+  .key-point {
+    display: flex; gap: 10px; align-items: flex-start;
+    background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+    border-radius: 11px; padding: 12px; margin-bottom: 8px;
+  }
+  .kp-num {
+    width: 22px; height: 22px; border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 10px; flex-shrink: 0;
+  }
+  .kp-text { font-size: 12px; color: #ccccee; line-height: 1.5; }
+
+  .mobility-box {
+    background: rgba(124,158,255,0.07); border: 1px solid rgba(124,158,255,0.18);
+    border-radius: 12px; padding: 13px; margin-top: 8px;
+  }
+  .mobility-box .mob-title { font-size: 11px; font-weight: 800; color: var(--p1); margin-bottom: 8px; }
+  .mob-item { font-size: 11px; color: #aaaacc; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.04); line-height: 1.5; }
+  .mob-item:last-child { border-bottom: none; }
+
+  /* Sessions */
+  .session-card {
+    background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+    border-radius: 13px; overflow: hidden; margin-bottom: 12px;
+  }
+  .session-header { padding: 11px 14px; font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 800; border-bottom: 1px solid var(--border); }
+  .exercise-row {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    padding: 11px 14px; gap: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .exercise-row:last-child { border-bottom: none; }
+  .ex-name { font-size: 12px; font-weight: 700; color: #e0e0f8; margin-bottom: 2px; }
+  .ex-note { font-size: 10px; color: var(--muted); line-height: 1.4; }
+  .ex-sets {
+    flex-shrink: 0; border-radius: 8px; padding: 4px 9px;
+    font-size: 11px; font-weight: 800;
+  }
+
+  /* Charges */
+  .charge-row {
+    display: flex; justify-content: space-between; align-items: center;
+    background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+    border-radius: 11px; padding: 12px 14px; margin-bottom: 8px;
+  }
+  .charge-week { font-size: 12px; font-weight: 700; color: #ccccee; }
+  .charge-intensity { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .rpe-badge { border-radius: 8px; padding: 4px 10px; font-size: 11px; font-weight: 800; flex-shrink: 0; }
+  .rpe-legend {
+    background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+    border-radius: 11px; padding: 13px; margin-top: 4px;
+  }
+  .rpe-legend .rpe-l { font-size: 10px; font-weight: 700; color: var(--muted); letter-spacing: 1px; margin-bottom: 7px; }
+  .rpe-legend p { font-size: 11px; color: #8888aa; line-height: 1.6; }
+
+  /* Jalons */
+  .milestone-main {
+    border-radius: 14px; padding: 20px; text-align: center; margin-bottom: 14px;
+  }
+  .m-emoji { font-size: 26px; margin-bottom: 6px; }
+  .m-label { font-size: 9px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 7px; }
+  .m-text { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 900; color: #f0f0ff; line-height: 1.4; }
+  .all-milestones { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
+  .all-m-title { font-size: 11px; font-weight: 700; color: #aaaacc; margin-bottom: 10px; }
+  .milestone-item { display: flex; gap: 10px; align-items: flex-start; padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .milestone-item:last-child { border-bottom: none; }
+  .m-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
+  .m-phase-label { font-size: 10px; font-weight: 700; margin-bottom: 2px; }
+  .m-phase-text { font-size: 11px; color: #ccccee; }
+
+  /* ---- NUTRITION ---- */
+  .section-title { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 900; color: #e0e0f8; margin-bottom: 12px; margin-top: 20px; }
+  .nutr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+  .nutr-card { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 12px; padding: 13px; }
+  .nutr-icon { font-size: 20px; margin-bottom: 5px; }
+  .nutr-title { font-size: 11px; font-weight: 700; color: #ccccee; margin-bottom: 3px; }
+  .nutr-text { font-size: 10px; color: #888899; line-height: 1.5; }
+
+  /* ---- SAFETY ---- */
+  .safety-box { background: rgba(244,114,182,0.06); border: 1px solid rgba(244,114,182,0.2); border-radius: 14px; padding: 15px; margin-top: 14px; }
+  .safety-title { font-size: 12px; font-weight: 800; color: var(--p3); margin-bottom: 10px; }
+  .safety-item { font-size: 11px; color: #bbbbdd; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.04); line-height: 1.5; }
+  .safety-item:last-child { border-bottom: none; }
+
+  .footer-note { text-align: center; padding: 20px 0 100px; font-size: 10px; color: #444466; line-height: 1.6; }
+
+  /* ---- BOTTOM NAV ---- */
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: rgba(10,10,20,0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-around;
+    padding: 10px 0 calc(10px + env(safe-area-inset-bottom));
+    z-index: 100;
+  }
+  .nav-btn {
+    flex: 1; display: flex; flex-direction: column; align-items: center;
+    gap: 3px; cursor: pointer; background: none; border: none;
+    color: var(--muted); font-family: 'DM Sans', sans-serif;
+    padding: 4px 0;
+  }
+  .nav-btn .nav-icon { font-size: 18px; }
+  .nav-btn .nav-label { font-size: 9px; font-weight: 600; }
+  .nav-btn.active { color: var(--p2); }
+
+  /* ---- PAGES ---- */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ---- TRACKER ---- */
+  .tracker-header { background: linear-gradient(135deg, rgba(52,211,153,0.12), rgba(52,211,153,0.04)); border-bottom: 1px solid var(--border); padding: 48px 20px 20px; }
+  .tracker-title { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 900; color: var(--p4); }
+  .tracker-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  .tracker-content { padding: 18px 16px; max-width: 700px; margin: 0 auto; }
+
+  .add-entry {
+    background: rgba(52,211,153,0.07); border: 1px solid rgba(52,211,153,0.2);
+    border-radius: 14px; padding: 16px; margin-bottom: 16px;
+  }
+  .add-entry .ae-title { font-size: 12px; font-weight: 800; color: var(--p4); margin-bottom: 12px; }
+
+  .field-row { display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+  .field-group { flex: 1; min-width: 100px; }
+  .field-label { font-size: 10px; color: var(--muted); margin-bottom: 4px; font-weight: 600; }
+  input[type="number"], input[type="text"], input[type="date"], textarea {
+    width: 100%; background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 9px; padding: 9px 12px;
+    color: var(--text); font-family: 'DM Sans', sans-serif;
+    font-size: 13px; outline: none;
+    -webkit-appearance: none;
+  }
+  input:focus, textarea:focus { border-color: var(--p4); }
+  textarea { resize: none; height: 60px; font-size: 12px; }
+
+  .btn-add {
+    width: 100%; padding: 11px; border-radius: 11px;
+    background: linear-gradient(135deg, var(--p4), #059669);
+    border: none; color: #0a0a14; font-family: 'Syne', sans-serif;
+    font-size: 13px; font-weight: 900; cursor: pointer;
+    margin-top: 6px;
+  }
+
+  .entries-list { display: flex; flex-direction: column; gap: 9px; }
+  .entry-card {
+    background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+    border-radius: 12px; padding: 13px;
+    display: flex; justify-content: space-between; align-items: flex-start;
+  }
+  .entry-main { flex: 1; }
+  .entry-weight { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 900; color: var(--p4); }
+  .entry-date { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .entry-note { font-size: 11px; color: #aaaacc; margin-top: 5px; line-height: 1.4; font-style: italic; }
+  .entry-tags { display: flex; gap: 5px; margin-top: 6px; flex-wrap: wrap; }
+  .tag {
+    padding: 2px 8px; border-radius: 5px; font-size: 9px; font-weight: 700;
+    background: rgba(52,211,153,0.15); color: var(--p4); border: 1px solid rgba(52,211,153,0.3);
+  }
+  .tag.bad { background: rgba(244,114,182,0.15); color: var(--p3); border-color: rgba(244,114,182,0.3); }
+  .entry-del { background: none; border: none; color: #555577; font-size: 16px; cursor: pointer; padding: 2px 4px; }
+
+  .empty-state { text-align: center; padding: 40px 20px; }
+  .empty-icon { font-size: 40px; margin-bottom: 10px; }
+  .empty-text { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  /* ---- CHART ---- */
+  .chart-wrap { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 16px; overflow: hidden; }
+  .chart-title { font-size: 12px; font-weight: 700; color: #ccccee; margin-bottom: 12px; }
+  canvas { width: 100% !important; }
+
+  /* ---- CHECKLIST PAGE ---- */
+  .check-header { background: linear-gradient(135deg, rgba(167,139,250,0.12), rgba(167,139,250,0.04)); border-bottom: 1px solid var(--border); padding: 48px 20px 20px; }
+  .check-title { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 900; color: var(--p2); }
+  .check-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  .check-content { padding: 18px 16px; max-width: 700px; margin: 0 auto; }
+
+  .week-selector { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; scrollbar-width: none; }
+  .week-selector::-webkit-scrollbar { display: none; }
+  .week-btn {
+    flex: 0 0 auto; padding: 7px 14px; border-radius: 9px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: transparent; color: var(--muted);
+    font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 700;
+    cursor: pointer;
+  }
+  .week-btn.active { border-color: var(--p2); background: rgba(167,139,250,0.15); color: var(--p2); }
+
+  .day-check { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 12px; padding: 13px; margin-bottom: 8px; cursor: pointer; transition: all 0.15s; }
+  .day-check.checked { border-color: rgba(52,211,153,0.3); background: rgba(52,211,153,0.06); }
+  .check-box { width: 22px; height: 22px; border-radius: 7px; border: 2px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.15s; font-size: 12px; }
+  .day-check.checked .check-box { background: var(--p4); border-color: var(--p4); }
+  .day-name { font-size: 13px; font-weight: 700; color: #e0e0f8; flex: 1; }
+  .day-detail { font-size: 10px; color: var(--muted); margin-top: 1px; }
+  .day-check.checked .day-name { color: var(--p4); }
+
+  .week-stats { background: rgba(167,139,250,0.07); border: 1px solid rgba(167,139,250,0.2); border-radius: 12px; padding: 13px; margin-bottom: 14px; display: flex; justify-content: space-around; }
+  .ws-item { text-align: center; }
+  .ws-val { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 900; color: var(--p2); }
+  .ws-lbl { font-size: 10px; color: var(--muted); margin-top: 2px; }
+</style>
+</head>
+<body>
+
+<!-- INSTALL BANNERS -->
+<div id="install-banner">
+  <div class="icon">🏋️</div>
+  <div class="text">
+    <strong>Ajouter à l'écran d'accueil</strong>
+    <span>Accès rapide comme une vraie app</span>
+  </div>
+  <button onclick="installApp()">Installer</button>
+  <button class="close-btn" onclick="document.getElementById('install-banner').classList.remove('show')">×</button>
+</div>
+
+<div id="ios-banner">
+  <div class="ios-title">
+    📲 Ajouter à l'écran d'accueil
+    <button class="close-btn" onclick="document.getElementById('ios-banner').classList.remove('show')">×</button>
+  </div>
+  <div class="ios-steps">
+    1. Appuie sur <span>Partager</span> (icône carré avec flèche) en bas de Safari<br>
+    2. Fais défiler et appuie sur <span>"Sur l'écran d'accueil"</span><br>
+    3. Appuie sur <span>Ajouter</span> — c'est tout ! 🎉
+  </div>
+</div>
+
+<!-- PAGE : PROGRAMME -->
+<div id="page-program" class="page active">
+
+  <div class="header">
+    <div class="header-label">Programme Squat Personnalisé</div>
+    <div class="header-title">Barre à vide → 100kg</div>
+    <div class="header-sub">15 mars → 31 décembre 2026 · Amplitude complète</div>
+    <div class="progress-wrap">
+      <div class="progress-labels"><span>Aujourd'hui</span><span>Objectif 31 déc. 🏆</span></div>
+      <div class="progress-bar"><div class="progress-fill"></div></div>
+      <div class="progress-labels"><span>Technique</span><span>100kg</span></div>
+    </div>
+  </div>
+
+  <!-- Phase tabs -->
+  <div class="phase-tabs" id="phaseTabs"></div>
+
+  <div class="content">
+    <!-- Phase info card -->
+    <div id="phaseCard"></div>
+
+    <!-- Inner tabs -->
+    <div class="inner-tabs" id="innerTabs"></div>
+
+    <!-- Sections -->
+    <div id="sectionOverview" class="section"></div>
+    <div id="sectionSessions" class="section"></div>
+    <div id="sectionCharges" class="section"></div>
+    <div id="sectionJalons" class="section"></div>
+
+    <!-- Nutrition -->
+    <div class="section-title">🍽️ Nutrition & Récupération</div>
+    <div class="nutr-grid" id="nutrGrid"></div>
+
+    <div class="safety-box">
+      <div class="safety-title">⚡ Points de sécurité</div>
+      <div id="safetyList"></div>
+    </div>
+
+    <div class="footer-note">Programme basé sur les principes reconnus d'entraînement en force.<br>Adapte toujours selon tes sensations · Consulte un professionnel si besoin.</div>
+  </div>
+</div>
+
+<!-- PAGE : TRACKER -->
+<div id="page-tracker" class="page">
+  <div class="tracker-header">
+    <div class="tracker-title">📈 Suivi de progression</div>
+    <div class="tracker-sub">Enregistre chaque test ou séance importante</div>
+  </div>
+  <div class="tracker-content">
+
+    <div class="chart-wrap" id="chartWrap" style="display:none">
+      <div class="chart-title">Évolution de ta charge (kg)</div>
+      <canvas id="progressChart" height="180"></canvas>
+    </div>
+
+    <div class="add-entry">
+      <div class="ae-title">+ Nouvelle entrée</div>
+      <div class="field-row">
+        <div class="field-group">
+          <div class="field-label">Date</div>
+          <input type="date" id="entryDate">
+        </div>
+        <div class="field-group">
+          <div class="field-label">Charge (kg)</div>
+          <input type="number" id="entryWeight" placeholder="ex: 45" min="0" max="200">
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-group" style="flex:1">
+          <div class="field-label">Type</div>
+          <select id="entryType" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:9px;padding:9px 12px;color:#e8e8f8;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;-webkit-appearance:none;">
+            <option value="training">Séance normale</option>
+            <option value="max">Test de max</option>
+            <option value="mobility">Focus mobilité</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-group" style="flex:1">
+          <div class="field-label">Amplitude complète ?</div>
+          <select id="entryAmplitude" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:9px;padding:9px 12px;color:#e8e8f8;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;-webkit-appearance:none;">
+            <option value="yes">✅ Oui, amplitude complète</option>
+            <option value="partial">⚠️ Partielle</option>
+            <option value="no">❌ Non</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-group" style="flex:1">
+          <div class="field-label">Notes (optionnel)</div>
+          <textarea id="entryNote" placeholder="Comment c'était ? Douleur ? Sensation ?"></textarea>
+        </div>
+      </div>
+      <button class="btn-add" onclick="addEntry()">Enregistrer 💪</button>
+    </div>
+
+    <div id="entriesList"></div>
+  </div>
+</div>
+
+<!-- PAGE : CHECKLIST -->
+<div id="page-check" class="page">
+  <div class="check-header">
+    <div class="check-title">✅ Checklist hebdo</div>
+    <div class="check-sub">Coche tes séances et habitudes chaque semaine</div>
+  </div>
+  <div class="check-content">
+    <div class="week-stats" id="weekStats">
+      <div class="ws-item"><div class="ws-val" id="statDone">0</div><div class="ws-lbl">Séances faites</div></div>
+      <div class="ws-item"><div class="ws-val" id="statTotal">6</div><div class="ws-lbl">Planifiées</div></div>
+      <div class="ws-item"><div class="ws-val" id="statStreak">0</div><div class="ws-lbl">Jours streak</div></div>
+    </div>
+
+    <div class="week-selector" id="weekSelector"></div>
+
+    <div id="checkList"></div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <button class="nav-btn active" id="nav-program" onclick="showPage('program')">
+    <div class="nav-icon">🏋️</div>
+    <div class="nav-label">Programme</div>
+  </button>
+  <button class="nav-btn" id="nav-tracker" onclick="showPage('tracker')">
+    <div class="nav-icon">📈</div>
+    <div class="nav-label">Tracker</div>
+  </button>
+  <button class="nav-btn" id="nav-check" onclick="showPage('check')">
+    <div class="nav-icon">✅</div>
+    <div class="nav-label">Checklist</div>
+  </button>
+</div>
+
+<script>
+// ========== DATA ==========
+const phases = [
+  {
+    id:1, name:"Phase 1", subtitle:"Reconstruction technique",
+    duration:"15 mars → 30 avril 2026", weeks:"7 semaines", color:"#7C9EFF",
+    goal:"Amplitude complète propre + réactivation neuromusculaire",
+    desc:"On repart de zéro sur la technique. Pas d'ego, juste de la qualité. C'est là que tout se joue sur le long terme.",
+    keyPoints:[
+      "Barre à vide → 40kg max selon sensations",
+      "Focus absolu sur profondeur, placement dos, genoux",
+      "Goblet squat et squat assisté pour apprendre le bon chemin",
+      "Mobilité cheville et hanche quotidienne (5-10 min)",
+      "3 séances squat / semaine, volume modéré"
+    ],
+    mobility:[
+      "Squat profond tenu 2 min (au réveil ou avant séance)",
+      "Étirements chevilles : pied contre mur, genou en avant",
+      "90/90 hanche : 2x60s chaque côté",
+      "Foam roller mollets + TFL"
+    ],
+    sessions:[
+      { day:"Séance A", exercises:[
+        {name:"Goblet squat", sets:"4×8", note:"Amplitude max, tempo lent (3s descente)"},
+        {name:"Squat barre (vide→30kg)", sets:"5×5", note:"Amplitude complète, film-toi"},
+        {name:"Box squat bas", sets:"3×6", note:"S'asseoir sur la box, pause 1s"},
+        {name:"Fentes marchées", sets:"3×10/j", note:"Contrôle du genou"},
+      ]},
+      { day:"Séance B", exercises:[
+        {name:"Pause squat", sets:"4×5", note:"3s pause en bas, 40-50% perçu"},
+        {name:"Squat roumain (RDL)", sets:"3×10", note:"Étirement ischio, gainage"},
+        {name:"Hip thrust", sets:"4×10", note:"Fessiers + lien pelvis/squat"},
+        {name:"Mobilité cheville", sets:"3×15", note:"Pied sur planche inclinée"},
+      ]}
+    ],
+    charges:[
+      {week:"S1-S2", intensity:"Barre à vide", rpe:"RPE 5-6"},
+      {week:"S3-S4", intensity:"20-30kg", rpe:"RPE 6"},
+      {week:"S5-S6", intensity:"30-40kg", rpe:"RPE 6-7"},
+      {week:"S7 décharge", intensity:"40kg max", rpe:"RPE 5"},
+    ],
+    milestone:"Test fin Phase 1 : 50kg × 3 en amplitude complète"
+  },
+  {
+    id:2, name:"Phase 2", subtitle:"Accumulation de volume",
+    duration:"1 mai → 30 juin 2026", weeks:"8 semaines", color:"#A78BFA",
+    goal:"Construire une base de force solide avec le bon mouvement",
+    desc:"L'amplitude est là, maintenant on construit la force dessus. C'est la phase la plus longue et la plus importante pour progresser durablement.",
+    keyPoints:[
+      "Progressions linéaires : +2.5kg tous les 1-2 entraînements",
+      "Séances de back squat + renforcement complémentaire",
+      "Introduction du front squat pour mobilité et quadriceps",
+      "Ceinture abdominale renforcée (planches, dead bug)",
+      "Suivi d'un carnet/app de progression obligatoire"
+    ],
+    sessions:[
+      { day:"Séance A — Force", exercises:[
+        {name:"Back squat", sets:"4×5", note:"Progression linéaire +2.5kg/séance"},
+        {name:"Leg press", sets:"3×10", note:"Complément volume quadriceps"},
+        {name:"Good morning léger", sets:"3×10", note:"Chaîne postérieure, dos droit"},
+        {name:"Gainage planche", sets:"3×45s", note:"Core solide = transfert de force"},
+      ]},
+      { day:"Séance B — Technique/Hypertrophie", exercises:[
+        {name:"Front squat", sets:"4×6", note:"60-65% du back squat, amplitude +"},
+        {name:"Hack squat ou goblet lourd", sets:"3×10", note:"Volume quadriceps"},
+        {name:"Hip thrust progressif", sets:"4×8", note:"+charge vs phase 1"},
+        {name:"Dead bug", sets:"3×10/c", note:"Stabilisation lombaire"},
+      ]},
+      { day:"Séance C — Volume léger", exercises:[
+        {name:"Back squat (70%)", sets:"5×3", note:"Vitesse + technique"},
+        {name:"Walking lunges chargés", sets:"3×10/j", note:"Unilatéral important"},
+        {name:"Romanian DL", sets:"3×8", note:"Chaîne postérieure"},
+        {name:"Hollow hold", sets:"3×30s", note:"Gainage avancé"},
+      ]}
+    ],
+    charges:[
+      {week:"S1-S2", intensity:"55-65kg", rpe:"RPE 6-7"},
+      {week:"S3-S4", intensity:"60-70kg", rpe:"RPE 7"},
+      {week:"S5-S6", intensity:"65-75kg", rpe:"RPE 7-8"},
+      {week:"S7", intensity:"70-80kg", rpe:"RPE 8"},
+      {week:"S8 décharge", intensity:"-20% charge", rpe:"RPE 5"},
+    ],
+    milestone:"Test fin Phase 2 : 80kg × 1 en amplitude complète propre"
+  },
+  {
+    id:3, name:"Phase 3", subtitle:"Intensification",
+    duration:"1 juillet → 31 août 2026", weeks:"8 semaines", color:"#F472B6",
+    goal:"Repousser les limites — dépasser les 80kg vers 90kg",
+    desc:"On monte dans les charges et on introduit des méthodes d'intensification. Le corps est maintenant prêt pour travailler lourd proprement.",
+    keyPoints:[
+      "Introduction des blocs de type 5/3/1 ou Texas Method",
+      "Travail en cluster sets et pause squat lourd",
+      "Récupération et sommeil deviennent des priorités absolues",
+      "Nutrition : apport protéique suffisant (~1.6-2g/kg/jour)",
+      "Suivi de la qualité du mouvement à chaque séance"
+    ],
+    sessions:[
+      { day:"Séance A — Lourd", exercises:[
+        {name:"Back squat (85-90% max)", sets:"5×1-3", note:"Lourd, technique parfaite"},
+        {name:"Pause squat (70%)", sets:"4×3", note:"3s pause en bas"},
+        {name:"Leg press lourd", sets:"3×8", note:"Complément force"},
+        {name:"GHR ou Nordic curl", sets:"3×6", note:"Ischio-jambiers, prévention"},
+      ]},
+      { day:"Séance B — Volume", exercises:[
+        {name:"Back squat (70-75%)", sets:"4×6-8", note:"Volume → force endurance"},
+        {name:"Front squat", sets:"3×5", note:"Technique + force quad"},
+        {name:"Hip thrust lourd", sets:"4×6", note:"Charge maximale"},
+        {name:"Ab wheel / planche dyn.", sets:"3×10-12", note:"Core avancé"},
+      ]}
+    ],
+    charges:[
+      {week:"S1-S2", intensity:"78-83kg", rpe:"RPE 7-8"},
+      {week:"S3-S4", intensity:"83-88kg", rpe:"RPE 8"},
+      {week:"S5-S6", intensity:"85-90kg", rpe:"RPE 8-9"},
+      {week:"S7", intensity:"88-92kg tentative", rpe:"RPE 9"},
+      {week:"S8 décharge", intensity:"-25% charge", rpe:"RPE 4-5"},
+    ],
+    milestone:"Test fin Phase 3 : 90kg × 1 ou 85kg × 3 en amplitude complète"
+  },
+  {
+    id:4, name:"Phase 4", subtitle:"Peak & Objectif",
+    duration:"1 sept → 31 décembre 2026", weeks:"16 semaines", color:"#34D399",
+    goal:"Atteindre et dépasser les 100kg au squat en amplitude complète",
+    desc:"La dernière ligne droite. On cycle intelligemment pour arriver au pic de force le 31 décembre. Pas de rush, pas de blessure, juste de la progression propre.",
+    keyPoints:[
+      "Cycles de 4 semaines : 3 semaines montée + 1 décharge",
+      "Tentatives de max toutes les 4 semaines environ",
+      "Réduction progressive du volume, augmentation intensité",
+      "Protocole de pic les 2 dernières semaines avant le test final",
+      "Confiance mentale : visualisation, routine pré-séance"
+    ],
+    sessions:[
+      { day:"Cycle type (4 semaines)", exercises:[
+        {name:"S1 : Back squat 3×5 (80%)", sets:"Base", note:"Remettre dans le rythme post-décharge"},
+        {name:"S2 : Back squat 4×3 (87%)", sets:"Montée", note:"Lourd mais propre"},
+        {name:"S3 : Back squat 2×2 (92%) + 1×1 (95-97%)", sets:"Pic", note:"Tentative max ou proche"},
+        {name:"S4 : Décharge 3×3 (65-70%)", sets:"Récup", note:"Supercompensation → force qui monte"},
+      ]}
+    ],
+    charges:[
+      {week:"Sept cycle 1", intensity:"88-93kg", rpe:"RPE 8-9"},
+      {week:"Oct cycle 2", intensity:"92-96kg", rpe:"RPE 9"},
+      {week:"Nov cycle 3", intensity:"95-100kg", rpe:"RPE 9-10"},
+      {week:"Déc peak", intensity:"TEST 100kg+", rpe:"All in 🔥"},
+    ],
+    milestone:"31 décembre 2026 : 100kg squat amplitude complète ✓ 🏆"
+  }
+];
+
+const nutrition = [
+  {icon:"🥩", title:"Protéines", text:"1.6 à 2g par kg de poids corporel/jour. Indispensable pour récupérer et progresser."},
+  {icon:"🍚", title:"Glucides", text:"Ne pas les fuir ! Riz, avoine, patate douce alimentent tes séances lourdes."},
+  {icon:"😴", title:"Sommeil", text:"8h minimum à 17 ans. C'est là que tu progresses vraiment — pas négociable."},
+  {icon:"💧", title:"Hydratation", text:"2-3L d'eau par jour. La déshydratation impacte directement ta force."},
+  {icon:"🔄", title:"Récupération", text:"1-2 jours de repos entre les séances squat. Progrès = séance + récup."},
+];
+
+const safety = [
+  "Tu as 17 ans → ton corps est en développement. Respecte les décharges, ne zappe pas le repos.",
+  "Si tu ressens une douleur (pas une gêne, une vraie douleur) : stop et consulte un kiné ou médecin du sport.",
+  "La ceinture lombaire peut être introduite en phase 3-4 sur les séries vraiment lourdes.",
+  "Film-toi régulièrement de profil. Ce que tu ressens et ce que tu fais sont souvent différents.",
+  "Un coach même occasionnel pour valider ta technique vaut tout l'or du monde.",
+];
+
+// ========== STATE ==========
+let currentPhase = 0;
+let currentInnerTab = 'overview';
+let entries = JSON.parse(localStorage.getItem('squat_entries') || '[]');
+let checks = JSON.parse(localStorage.getItem('squat_checks') || '{}');
+let currentWeek = 0;
+let deferredPrompt = null;
+
+// ========== INIT ==========
+window.addEventListener('load', () => {
+  renderProgram();
+  renderNutrition();
+  renderSafety();
+  renderTracker();
+  renderWeekSelector();
+  renderCheckList();
+  initToday();
+  checkInstall();
+});
+
+// ========== PWA INSTALL ==========
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('install-banner').classList.add('show');
+});
+
+function checkInstall() {
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  const isInStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
+  if (isIOS && !isInStandalone && !localStorage.getItem('ios_banner_shown')) {
+    setTimeout(() => {
+      document.getElementById('ios-banner').classList.add('show');
+      localStorage.setItem('ios_banner_shown', '1');
+    }, 2000);
+  }
+}
+
+function installApp() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(() => {
+      deferredPrompt = null;
+      document.getElementById('install-banner').classList.remove('show');
+    });
+  }
+}
+
+// ========== NAVIGATION ==========
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.getElementById('nav-' + page).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// ========== PROGRAM ==========
+function getRpeColor(rpe) {
+  if (rpe.includes('🔥') || rpe.includes('10')) return {bg:'rgba(244,114,182,0.2)', border:'rgba(244,114,182,0.4)', color:'#F472B6'};
+  if (rpe.includes('9')) return {bg:'rgba(167,139,250,0.2)', border:'rgba(167,139,250,0.4)', color:'#A78BFA'};
+  if (rpe.includes('8')) return {bg:'rgba(124,158,255,0.2)', border:'rgba(124,158,255,0.4)', color:'#7C9EFF'};
+  return {bg:'rgba(52,211,153,0.2)', border:'rgba(52,211,153,0.4)', color:'#34D399'};
+}
+
+function renderProgram() {
+  const p = phases[currentPhase];
+  const colorClass = `c${p.id}`;
+  const itClass = `it${p.id}`;
+
+  // Phase tabs
+  document.getElementById('phaseTabs').innerHTML = phases.map((ph, i) =>
+    `<button class="phase-tab ${i===currentPhase ? 'active-'+ph.id : ''}" onclick="switchPhase(${i})">
+      <span class="tab-label">Phase ${ph.id}</span>${ph.subtitle}
+    </button>`
+  ).join('');
+
+  // Phase card
+  document.getElementById('phaseCard').innerHTML = `
+    <div class="phase-card ${colorClass}">
+      <div class="phase-header-row">
+        <div>
+          <div class="phase-name-label" style="color:${p.color}">${p.name} · ${p.weeks}</div>
+          <div class="phase-title">${p.subtitle}</div>
+          <div class="phase-dates">${p.duration}</div>
+        </div>
+        <div class="phase-goal-badge" style="background:${p.color}20;border:1px solid ${p.color}40">
+          <div class="badge-label" style="color:${p.color}">OBJECTIF</div>
+          <div class="badge-text">${p.goal}</div>
+        </div>
+      </div>
+      <div class="phase-desc">${p.desc}</div>
+    </div>`;
+
+  // Inner tabs
+  document.getElementById('innerTabs').innerHTML =
+    ['overview','sessions','charges','jalons'].map(tab =>
+      `<button class="inner-tab ${itClass} ${currentInnerTab===tab?'on':''}" onclick="switchTab('${tab}')">
+        ${{overview:'Points clés', sessions:'Séances', charges:'Charges', jalons:'Jalons'}[tab]}
+      </button>`
+    ).join('');
+
+  // Sections
+  renderOverview(p, itClass);
+  renderSessions(p);
+  renderCharges(p);
+  renderJalons(p);
+  showSection(currentInnerTab);
+}
+
+function renderOverview(p, itClass) {
+  let html = p.keyPoints.map((kp, i) => `
+    <div class="key-point">
+      <div class="kp-num" style="background:${p.color}25;color:${p.color}">${i+1}</div>
+      <div class="kp-text">${kp}</div>
+    </div>`).join('');
+
+  if (p.mobility) {
+    html += `<div class="mobility-box">
+      <div class="mob-title">🧘 Routine mobilité quotidienne</div>
+      ${p.mobility.map(m => `<div class="mob-item">· ${m}</div>`).join('')}
+    </div>`;
+  }
+  document.getElementById('sectionOverview').innerHTML = html;
+}
+
+function renderSessions(p) {
+  document.getElementById('sectionSessions').innerHTML = p.sessions.map(s => `
+    <div class="session-card">
+      <div class="session-header" style="background:${p.color}18;color:${p.color}">${s.day}</div>
+      ${s.exercises.map(ex => `
+        <div class="exercise-row">
+          <div>
+            <div class="ex-name">${ex.name}</div>
+            <div class="ex-note">${ex.note}</div>
+          </div>
+          <div class="ex-sets" style="background:${p.color}20;border:1px solid ${p.color}30;color:${p.color}">${ex.sets}</div>
+        </div>`).join('')}
+    </div>`).join('');
+}
+
+function renderCharges(p) {
+  document.getElementById('sectionCharges').innerHTML =
+    p.charges.map(c => {
+      const rc = getRpeColor(c.rpe);
+      return `<div class="charge-row">
+        <div>
+          <div class="charge-week">${c.week}</div>
+          <div class="charge-intensity">${c.intensity}</div>
+        </div>
+        <div class="rpe-badge" style="background:${rc.bg};border:1px solid ${rc.border};color:${rc.color}">${c.rpe}</div>
+      </div>`;
+    }).join('') + `
+    <div class="rpe-legend">
+      <div class="rpe-l">RPE = EFFORT PERÇU</div>
+      <p>RPE 6 = modéré, 4 reps en réserve · RPE 8 = lourd, 2 en réserve · RPE 9-10 = quasi-max · Décharge = repos actif qui crée la supercompensation</p>
+    </div>`;
+}
+
+function renderJalons(p) {
+  document.getElementById('sectionJalons').innerHTML = `
+    <div class="milestone-main" style="background:${p.color}18;border:1px solid ${p.color}40">
+      <div class="m-emoji">🎯</div>
+      <div class="m-label" style="color:${p.color}">Jalon de validation</div>
+      <div class="m-text">${p.milestone}</div>
+    </div>
+    <div class="all-milestones">
+      <div class="all-m-title">📋 Tous les jalons du programme</div>
+      ${phases.map(ph => `
+        <div class="milestone-item">
+          <div class="m-dot" style="background:${ph.color}"></div>
+          <div>
+            <div class="m-phase-label" style="color:${ph.color}">${ph.name} · fin ${ph.duration.split('→')[1]?.trim()}</div>
+            <div class="m-phase-text">${ph.milestone}</div>
+          </div>
+        </div>`).join('')}
+    </div>`;
+}
+
+function renderNutrition() {
+  document.getElementById('nutrGrid').innerHTML = nutrition.map(n => `
+    <div class="nutr-card">
+      <div class="nutr-icon">${n.icon}</div>
+      <div class="nutr-title">${n.title}</div>
+      <div class="nutr-text">${n.text}</div>
+    </div>`).join('');
+}
+
+function renderSafety() {
+  document.getElementById('safetyList').innerHTML = safety.map(s =>
+    `<div class="safety-item">· ${s}</div>`).join('');
+}
+
+function switchPhase(i) {
+  currentPhase = i;
+  currentInnerTab = 'overview';
+  renderProgram();
+  document.querySelector('.phase-tabs').scrollLeft = 0;
+}
+
+function switchTab(tab) {
+  currentInnerTab = tab;
+  document.querySelectorAll('.inner-tab').forEach(b => b.classList.remove('on'));
+  event.target.classList.add('on');
+  showSection(tab);
+}
+
+function showSection(tab) {
+  ['overview','sessions','charges','jalons'].forEach(t => {
+    const el = document.getElementById('section' + t.charAt(0).toUpperCase() + t.slice(1));
+    el.classList.toggle('visible', t === tab);
+  });
+}
+
+// ========== TRACKER ==========
+function initToday() {
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('entryDate').value = today;
+}
+
+function addEntry() {
+  const date = document.getElementById('entryDate').value;
+  const weight = parseFloat(document.getElementById('entryWeight').value);
+  const type = document.getElementById('entryType').value;
+  const amplitude = document.getElementById('entryAmplitude').value;
+  const note = document.getElementById('entryNote').value.trim();
+
+  if (!date || isNaN(weight) || weight <= 0) {
+    alert('Entre une date et une charge valide !');
+    return;
+  }
+
+  entries.unshift({ id: Date.now(), date, weight, type, amplitude, note });
+  localStorage.setItem('squat_entries', JSON.stringify(entries));
+  document.getElementById('entryWeight').value = '';
+  document.getElementById('entryNote').value = '';
+  renderTracker();
+}
+
+function deleteEntry(id) {
+  entries = entries.filter(e => e.id !== id);
+  localStorage.setItem('squat_entries', JSON.stringify(entries));
+  renderTracker();
+}
+
+function renderTracker() {
+  const list = document.getElementById('entriesList');
+
+  if (entries.length === 0) {
+    list.innerHTML = `<div class="empty-state">
+      <div class="empty-icon">📊</div>
+      <div class="empty-text">Aucune entrée pour l'instant.<br>Enregistre ta première séance ci-dessus !</div>
+    </div>`;
+    document.getElementById('chartWrap').style.display = 'none';
+    return;
+  }
+
+  document.getElementById('chartWrap').style.display = 'block';
+
+  const typeLabel = {training:'Séance', max:'Test max', mobility:'Mobilité'};
+  const ampLabel = {yes:'✅ Amplitude complète', partial:'⚠️ Partielle', no:'❌ Non'};
+  const ampGood = {yes:true, partial:false, no:false};
+
+  list.innerHTML = '<div class="entries-list">' + entries.map(e => `
+    <div class="entry-card">
+      <div class="entry-main">
+        <div class="entry-weight">${e.weight} kg</div>
+        <div class="entry-date">${new Date(e.date).toLocaleDateString('fr-FR', {day:'numeric',month:'long',year:'numeric'})}</div>
+        ${e.note ? `<div class="entry-note">"${e.note}"</div>` : ''}
+        <div class="entry-tags">
+          <span class="tag">${typeLabel[e.type]||e.type}</span>
+          <span class="tag ${ampGood[e.amplitude]?'':'bad'}">${ampLabel[e.amplitude]||e.amplitude}</span>
+        </div>
+      </div>
+      <button class="entry-del" onclick="deleteEntry(${e.id})">🗑</button>
+    </div>`).join('') + '</div>';
+
+  drawChart();
+}
+
+function drawChart() {
+  const sorted = [...entries].sort((a,b) => new Date(a.date)-new Date(b.date));
+  if (sorted.length < 2) return;
+
+  const canvas = document.getElementById('progressChart');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.offsetWidth || 320;
+  const H = 160;
+  canvas.width = W * window.devicePixelRatio;
+  canvas.height = H * window.devicePixelRatio;
+  ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+  const vals = sorted.map(e => e.weight);
+  const min = Math.max(0, Math.min(...vals) - 5);
+  const max = Math.max(...vals, 100) + 5;
+  const pad = {l:36, r:16, t:10, b:28};
+  const W2 = W - pad.l - pad.r;
+  const H2 = H - pad.t - pad.b;
+
+  ctx.clearRect(0,0,W,H);
+
+  // Grid lines
+  ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+  ctx.lineWidth = 1;
+  for (let i=0;i<=4;i++) {
+    const y = pad.t + H2 * (1 - i/4);
+    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(pad.l+W2, y); ctx.stroke();
+    const val = Math.round(min + (max-min)*i/4);
+    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+    ctx.font = `${9*window.devicePixelRatio/window.devicePixelRatio}px DM Sans`;
+    ctx.textAlign = 'right';
+    ctx.fillText(val+'kg', pad.l-4, y+3);
+  }
+
+  // 100kg target line
+  const targetY = pad.t + H2 * (1 - (100-min)/(max-min));
+  ctx.strokeStyle = 'rgba(52,211,153,0.4)';
+  ctx.setLineDash([4,4]);
+  ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(pad.l, targetY); ctx.lineTo(pad.l+W2, targetY); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#34D399';
+  ctx.font = '9px DM Sans';
+  ctx.textAlign = 'left';
+  ctx.fillText('100kg 🎯', pad.l+W2-50, targetY-3);
+
+  // Gradient fill
+  const grad = ctx.createLinearGradient(0, pad.t, 0, pad.t+H2);
+  grad.addColorStop(0, 'rgba(167,139,250,0.3)');
+  grad.addColorStop(1, 'rgba(167,139,250,0)');
+  ctx.beginPath();
+  sorted.forEach((e,i) => {
+    const x = pad.l + W2*(i/(sorted.length-1));
+    const y = pad.t + H2*(1-(e.weight-min)/(max-min));
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  ctx.lineTo(pad.l+W2, pad.t+H2);
+  ctx.lineTo(pad.l, pad.t+H2);
+  ctx.closePath();
+  ctx.fillStyle = grad; ctx.fill();
+
+  // Line
+  ctx.strokeStyle = '#A78BFA';
+  ctx.lineWidth = 2;
+  ctx.lineJoin = 'round';
+  ctx.beginPath();
+  sorted.forEach((e,i) => {
+    const x = pad.l + W2*(i/(sorted.length-1));
+    const y = pad.t + H2*(1-(e.weight-min)/(max-min));
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  ctx.stroke();
+
+  // Dots
+  sorted.forEach((e,i) => {
+    const x = pad.l + W2*(i/(sorted.length-1));
+    const y = pad.t + H2*(1-(e.weight-min)/(max-min));
+    ctx.beginPath();
+    ctx.arc(x,y,3,0,Math.PI*2);
+    ctx.fillStyle = '#A78BFA'; ctx.fill();
+  });
+}
+
+// ========== CHECKLIST ==========
+const weekDays = [
+  {name:'Lundi', detail:'Séance A'},
+  {name:'Mardi', detail:'Repos ou mobilité 10min'},
+  {name:'Mercredi', detail:'Séance B'},
+  {name:'Jeudi', detail:'Repos actif (marche)'},
+  {name:'Vendredi', detail:'Séance C (si phase 2-4)'},
+  {name:'Samedi', detail:'Mobilité + récupération'},
+  {name:'Dimanche', detail:'Repos complet 😴'},
+];
+
+function getWeekKey(offset) {
+  const now = new Date();
+  const start = new Date(now);
+  start.setDate(now.getDate() - now.getDay() + 1 + offset * 7);
+  return start.toISOString().split('T')[0];
+}
+
+function renderWeekSelector() {
+  const sel = document.getElementById('weekSelector');
+  const labels = ['Il y a 2 sem.', 'Semaine passée', 'Cette semaine', 'Semaine prochaine'];
+  sel.innerHTML = [-2,-1,0,1].map((offset, i) =>
+    `<button class="week-btn ${offset===currentWeek-2?'':''}  ${offset===0?'active':''}" 
+      id="wb_${offset}" onclick="selectWeek(${offset})">${labels[i]}</button>`
+  ).join('');
+  document.getElementById('wb_0').classList.add('active');
+}
+
+function selectWeek(offset) {
+  currentWeek = offset;
+  document.querySelectorAll('.week-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('wb_'+offset).classList.add('active');
+  renderCheckList();
+}
+
+function toggleCheck(weekKey, dayIdx) {
+  const key = weekKey + '_' + dayIdx;
+  checks[key] = !checks[key];
+  localStorage.setItem('squat_checks', JSON.stringify(checks));
+  renderCheckList();
+  updateStats();
+}
+
+function renderCheckList() {
+  const weekKey = getWeekKey(currentWeek);
+  const list = document.getElementById('checkList');
+  list.innerHTML = weekDays.map((d,i) => {
+    const key = weekKey + '_' + i;
+    const done = checks[key];
+    return `<div class="day-check ${done?'checked':''}" onclick="toggleCheck('${weekKey}', ${i})">
+      <div class="check-box">${done?'✓':''}</div>
+      <div>
+        <div class="day-name">${d.name}</div>
+        <div class="day-detail">${d.detail}</div>
+      </div>
+    </div>`;
+  }).join('');
+  updateStats();
+}
+
+function updateStats() {
+  const weekKey = getWeekKey(currentWeek);
+  let done = 0;
+  for(let i=0;i<7;i++) {
+    if (checks[weekKey+'_'+i]) done++;
+  }
+  document.getElementById('statDone').textContent = done;
+
+  // Streak
+  let streak = 0;
+  const today = new Date();
+  for (let d=0; d<60; d++) {
+    const date = new Date(today);
+    date.setDate(today.getDate() - d);
+    const wk = date.toISOString().split('T')[0].slice(0,8) + '01';
+    const dayIdx = date.getDay() === 0 ? 6 : date.getDay()-1;
+    const wkStart = new Date(date);
+    wkStart.setDate(date.getDate() - dayIdx);
+    const key = wkStart.toISOString().split('T')[0] + '_' + dayIdx;
+    if (checks[key]) streak++;
+    else if (d > 0) break;
+  }
+  document.getElementById('statStreak').textContent = streak;
+}
+</script>
+
+<!-- PWA Manifest inline -->
+<script>
+const manifest = {
+  name: "Squat 100kg 🏋️",
+  short_name: "Squat 100kg",
+  description: "Mon programme squat personnalisé vers les 100kg",
+  start_url: ".",
+  display: "standalone",
+  background_color: "#0a0a14",
+  theme_color: "#0f0f1a",
+  orientation: "portrait",
+  icons: [
+    {
+      src: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='40' fill='%230a0a14'/><text y='130' x='96' text-anchor='middle' font-size='110'>🏋️</text></svg>",
+      sizes: "192x192",
+      type: "image/svg+xml"
+    }
+  ]
+};
+const blob = new Blob([JSON.stringify(manifest)], {type:'application/manifest+json'});
+document.getElementById('manifest-placeholder').href = URL.createObjectURL(blob);
+</script>
+
+</body>
+</html>
